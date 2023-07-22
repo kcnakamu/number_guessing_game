@@ -1,0 +1,111 @@
+import tkinter as tk
+import random
+
+# Creates a window
+window = tk.Tk()
+window.geometry("600x400")
+window.title('Number Guessing Game')
+
+# Code for the game logic
+RETRIES = 0
+LOWER = 0
+UPPER = 0
+TARGET = 0
+
+def update_result(text):
+    result.configure(text=text)
+
+def new_game():
+    guess_button.config(state='normal')
+    global LOWER, UPPER, TARGET, RETRIES
+    LOWER = int(lower_bound.get())
+    UPPER = int(upper_bound.get())
+    TARGET = random.randint(LOWER, UPPER)
+    RETRIES = 0
+    number_form_entry.delete(0, "end") 
+    update_result(text="Guess a number between " + str(LOWER) + " and " + str(UPPER) + ".")
+
+    
+
+def play_game():
+    global RETRIES
+    choice = int(number_form.get())
+     
+    if choice != TARGET:
+        RETRIES += 1
+        result_text = "Wrong Guess!! Try Again"
+        if TARGET < choice:
+            hint = "The required number lies between {} and {}".format(str(LOWER),choice)
+        else:
+            hint = "The required number lies between {} and {}".format(choice, str(UPPER))
+        result_text += "\n\nHINT:\n" + hint
+     
+    else:
+        result_text = "You guessed the correct number after {} retries.".format(RETRIES)
+        guess_button.config(state='disabled')
+        result_text += "\n" + "Click on Play to start a new game. \nAdjust the bounds now if needed."
+     
+    update_result(result_text)
+
+# Creates labels
+title = tk.Label(window, text="Guessing Game", font=("Arial", 24), fg="#fffcbd", bg="#065569")
+instructions = tk.Label(window, text = "Set the bounds first: ",font=("Arial", 12, "normal"), fg="White", bg="#065569" )
+
+# Result and hints of our game
+result = tk.Label(window, text="Click on Play to start a new game", font=("Arial", 12, "normal", "italic"), fg="White", bg="#065569", justify=tk.LEFT)
+
+# Play Button
+play_button = tk.Button(window, text="Play Game", font=("Arial", 14, "bold"), fg="Black", bg="#29c70a", command=new_game)
+
+# Guess Button
+guess_button = tk.Button(window, text="Enter", font=("Arial", 13), state='disabled', fg="#13d675", bg="Black", command=play_game)
+
+# Exit Button
+exit_button = tk.Button(window, text="Exit Game", font=("Arial", 14, "bold"), fg="Black", bg="#b82741", command=exit)
+
+# Entry Fields
+def temp_text(entry):
+   entry.delete(0,"end")
+
+def clear_default_text(event):
+    entry = event.widget
+    default_text = entry.get()
+    if default_text in default_texts:
+        entry.delete(0, "end")
+
+default_texts = ["Enter a guess", "Enter the lower bound", "Enter the upper bound"]
+
+lower_bound = tk.StringVar()
+upper_bound = tk.StringVar()
+number_form = tk.StringVar()
+
+number_form_entry = tk.Entry(window, font=("Arial", 11), textvariable=number_form)
+number_form_entry.insert(0, "Enter a guess")
+number_form_entry.bind("<FocusIn>", clear_default_text)
+
+lower_bound_entry = tk.Entry(window, font=("Arial", 11), textvariable=lower_bound)
+lower_bound_entry.insert(0, "Enter the lower bound")
+lower_bound_entry.bind("<FocusIn>", clear_default_text)
+
+upper_bound_entry = tk.Entry(window, font=("Arial", 11), textvariable=upper_bound)
+upper_bound_entry.insert(0, "Enter the upper bound")
+upper_bound_entry.bind("<FocusIn>", clear_default_text)
+
+
+
+# Place the labels
+title.place(x=200, y=50)
+instructions.place(x = 50, y = 110)
+result.place(x=20, y=200)
+
+# Place the buttons
+exit_button.place(x=300, y=320)
+guess_button.place(x=450, y=195)
+play_button.place(x=170, y=320)
+
+# Place the entry fields
+number_form_entry.place(x=280, y=200)
+lower_bound_entry.place(x=180, y=110)
+upper_bound_entry.place(x=350, y=110)
+
+window.mainloop()
