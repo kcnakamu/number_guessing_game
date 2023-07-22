@@ -1,0 +1,50 @@
+import random 
+
+# Create a simple number guessing game that can be run on Command Prompt
+def numberGuessGame():
+    sum_tries = 0
+    num_games = 0
+    user_consent = input("Do you want to play a number guessing game? Y/N: ")
+    while (user_consent.upper() != "Y" and user_consent.upper() != "N"):
+        user_consent= input("Invalid input. Enter \"Y\" to play and \"N\" to quit. Y/N: ")
+    while (user_consent.upper() == "Y"):
+        num_games += 1
+        lower_bound = get_int("What is the lower bound?: ")
+        upper_bound = get_int("What is the upper bound?: ")
+        while lower_bound > upper_bound:
+            lower_bound = get_int("Lower bound cannot be higher than the upper bound. Enter a new lower bound: ")
+        # Calls one game of number guesser 
+        sum_tries += numberGuesser(lower_bound,upper_bound)
+        user_consent=input(("Good job! Do you want to play again? Y/N:"))
+    print("Thanks for playing! You played " + str(num_games) + " games and your average guessing count was " + str(int(sum_tries/num_games)) + ".")    
+        
+
+
+# Defines one game of number guesser    
+def numberGuesser(start, end):
+    answer = random.randint(start,end)
+    user_guess = get_int("What is your guess? Enter values between " + str(start) + " and " + str(end) + ": ")
+    tries = 1
+    while user_guess != answer:
+        if user_guess < answer:
+            user_guess = get_int("Your guess is too low! Guess again: ")
+        else:
+            user_guess = get_int("Your guess is too high! Guess again: ")
+        tries += 1
+    if tries == 1:
+        print("Wow, you got it on the first try! The number was " + str(answer))
+    else:
+        print("Correct! The number was " + str(answer) + "! It took you " + str(tries) + " guesses. Can you get lower next time?")
+    return tries
+
+# Get an integer input 
+def get_int(prompt:str):
+    while True:
+        user_input = input(prompt)
+        try: 
+            value = int(user_input)
+            return value
+        except ValueError:
+            print("Invalid input. Please enter an integer.")
+
+numberGuessGame()
